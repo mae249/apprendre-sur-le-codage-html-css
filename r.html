@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Comprendre les instructions</title>
+    <style>
+
+        /* -------------------- GLOBAL -------------------- */
+        :root {
+            --bg: #000;
+            --text: #fff;
+            --accent: cyan;
+            --card: rgba(255,255,255,0.1);
+        }
+
+        body.light {
+            --bg: #fff;
+            --text: #000;
+            --accent: #008cff;
+            --card: rgba(0,0,0,0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+            text-align: center;
+        }
+
+        /* -------------------- LOADING SCREEN -------------------- */
+        #loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+        }
+
+        .ball {
+            width: 15px;
+            height: 15px;
+            margin: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: bounce 0.6s infinite alternate;
+        }
+
+        .ball:nth-child(2) { animation-delay: 0.2s; }
+        .ball:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
+
+        /* -------------------- PARTICLE BACKGROUND -------------------- */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: float 12s infinite linear;
+        }
+
+        @keyframes float {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100vh); }
+        }
+
+        /* -------------------- TITRE -------------------- */
+        h1 {
+            text-shadow: 0 0 15px var(--accent);
+            margin-top: 40px;
+        }
+
+        /* -------------------- BOUTON RETOUR + MODE -------------------- */
+        .top-buttons {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .retour, .mode-btn {
+            background: var(--accent);
+            color: black;
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .retour:hover, .mode-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* -------------------- GALLERIE / SLIDER -------------------- */
+        .slider {
+            position: relative;
+            max-width: 900px;
+            margin: 50px auto;
+        }
+
+        .slide {
+            display: none;
+        }
+
+        .slide img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 0 15px var(--accent);
+            cursor: pointer;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent);
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 20px;
+            color: black;
+            font-weight: bold;
+        }
+
+        .arrow:hover { transform: scale(1.1) translateY(-50%); }
+
+        .left { left: -80px; }
+        .right { right: -80px; }
+
+        /* -------------------- ZOOM -------------------- */
+        #zoomModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #zoomModal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 12px;
+            animation: zoom 0.3s;
+        }
+
+        @keyframes zoom {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* -------------------- AFFICHER PLUS -------------------- */
+        .toggle-btn {
+            background: var(--accent);
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 22px;
+            border: none;
+            cursor: pointer;
+            margin: 30px 0;
+            color: black;
+            font-weight: bold;
+        }
+
+        .toggle-box {
+            display: none;
+            background: var(--card);
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 900px;
+            margin: auto;
+            text-align: left;
+        }
+
+        .code {
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            color: var(--accent);
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- LOADER -->
+    <div id="loader">
+        <div class="ball"></div>
+        <div class="ball"></div>
+        <div class="ball"></div>
+    </div>
+
+    <!-- PARTICULES -->
+    <div id="particles"></div>
+
+    <!-- BOUTONS -->
+    <div class="top-buttons">
+        <a href="en apprendre sur le codage.html" class="retour">← Retour</a>
+        <button class="mode-btn" onclick="toggleMode()">🌙 / ☀️</button>
+    </div>
+
+    <h1>Comprendre les instructions</h1>
+
+    <!-- SLIDER -->
+    <div class="slider">
+        <div class="slide"><img src="https://i.ytimg.com/vi/RuPcirSyH5g/maxresdefault.jpg"></div>
+        <div class="slide"><img src="https://tse4.mm.bing.net/th/id/OIP.hVN04yi44Rv4ct8LXb0qUAHaFj"></div>
+        <div class="slide"><img src="https://tse3.mm.bing.net/th/id/OIP.ilXx7iXj_Rl6WtohpPxkIgHaD0"></div>
+        <div class="slide"><img src="https://image1.slideserve.com/2316069/html-css-definition-l.jpg"></div>
+
+        <div class="arrow left" onclick="changeSlide(-1)">⟨</div>
+        <div class="arrow right" onclick="changeSlide(1)">⟩</div>
+    </div>
+
+    <!-- ZOOM -->
+    <div id="zoomModal"><img id="zoomImg"></div>
+
+    <!-- AFFICHER PLUS -->
+    <button class="toggle-btn">Afficher plus</button>
+
+    <div class="toggle-box">
+        <h2 style="color:var(--accent)">Explications avancées</h2>
+
+        <p>Voici des concepts essentiels du codage :</p>
+
+        <h3 style="color:var(--accent)">Instruction simple</h3>
+        <div class="code">console.log("Bonjour !");</div>
+
+        <h3 style="color:var(--accent)">Condition</h3>
+        <div class="code">
+if (age >= 18) {
+    console.log("Tu es majeur");
+} else {
+    console.log("Tu es mineur");
+}
+        </div>
+
+        <h3 style="color:var(--accent)">Boucle</h3>
+        <div class="code">
+for (let i = 0; i < 5; i++) {
+    console.log("Je répète !");
+}
+        </div>
+    </div>
+
+<script>
+
+    /* -------------------- LOADER -------------------- */
+    window.onload = () => {
+        setTimeout(() => {
+            document.getElementById("loader").style.display = "none";
+        }, 1200);
+    };
+
+    /* -------------------- MODE SOMBRE / CLAIR -------------------- */
+    function toggleMode() {
+        document.body.classList.toggle("light");
+    }
+
+    /* -------------------- PARTICULES -------------------- */
+    const particleContainer = document.getElementById("particles");
+
+    for (let i = 0; i < 30; i++) {
+        let p = document.createElement("div");
+        p.classList.add("particle");
+        p.style.width = p.style.height = Math.random() * 6 + 4 + "px";
+        p.style.left = Math.random() * 100 + "vw";
+        p.style.top = Math.random() * 100 + "vh";
+        p.style.animationDuration = Math.random() * 10 + 8 + "s";
+        particleContainer.appendChild(p);
+    }
+
+    /* -------------------- SLIDER -------------------- */
+    let index = 0;
+    showSlide(index);
+
+    function showSlide(i) {
+        const slides = document.querySelectorAll(".slide");
+        slides.forEach(s => (s.style.display = "none"));
+        slides[i].style.display = "block";
+    }
+
+    function changeSlide(n) {
+        const slides = document.querySelectorAll(".slide");
+        index = (index + n + slides.length) % slides.length;
+        showSlide(index);
+    }
+
+    /* -------------------- ZOOM -------------------- */
+    const modal = document.getElementById("zoomModal");
+    const modalImg = document.getElementById("zoomImg");
+
+    document.querySelectorAll(".slide img").forEach(img => {
+        img.onclick = () => {
+            modal.style.display = "flex";
+            modalImg.src = img.src;
+        };
+    });
+
+    modal.onclick = () => { modal.style.display = "none"; };
+
+    /* -------------------- AFFICHER PLUS -------------------- */
+    document.querySelector(".toggle-btn").onclick = () => {
+        const box = document.querySelector(".toggle-box");
+        box.style.display = box.style.display === "block" ? "none" : "block";
+    };
+
+</script>
+
+</body>
+</html>
